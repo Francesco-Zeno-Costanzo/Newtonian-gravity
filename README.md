@@ -18,3 +18,5 @@ bin_sist    solves the problem of 3 bodies in 2 dimensions, simulating a star-st
 N_corpi(2d) solves the problem of N bodies in 2 dimensions.
 
 N_corpi(3d) solves the problem of N bodies in 3 dimensions.
+
+![](N_body.gif)
