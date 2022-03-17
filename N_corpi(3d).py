@@ -127,8 +127,8 @@ G = cst.value(u'Newtonian constant of gravitation')
 and so on for masses and distances for realistic simulation
 '''
 dim = 3 #il moto avviene nello spazio
-
-sist = Sistema(C, G, 0.01)
+soft = 0.01
+sist = Sistema(C, G, soft)
 Ene = Energia(C, G, soft)
 
 dt = 1 / 10000
