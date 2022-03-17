@@ -13,6 +13,7 @@ class Corpo:
         self.vx = vx
         self.vy = vy
 
+
     #aggiornamento posizione e velocità con eulero
     def n_vel(self, fx, fy, dt):
         self.vx += fx*dt
@@ -21,6 +22,7 @@ class Corpo:
     def n_pos(self, dt):
         self.x += self.vx*dt
         self.y += self.vy*dt
+
 
 class Sistema:
     '''
@@ -62,6 +64,36 @@ class Sistema:
         for corpo in self.corpi:
             corpo.n_pos(dt)
 
+class Energia:
+    '''
+    energia del sistema al tempo t
+    '''
+    def __init__(self, corpi, G, sp=0):
+        self.corpi = corpi
+        self.G = G
+        self.sp = sp
+
+    def cinetica(self):
+        K = 0
+        for corpo in self.corpi:
+            K += 0.5*corpo.m*(corpo.vx**2 + corpo.vy**2)
+        return K
+
+    def potenziale(self):
+        V = 0
+        corpi=self.corpi.copy()
+        for corpo_1 in corpi:
+            for corpo_2 in corpi:
+                if corpo_1 != corpo_2:
+                    dx = corpo_2.x - corpo_1.x
+                    dy = corpo_2.y - corpo_1.y
+                    d = np.sqrt(dx**2 + dy**2 + self.sp)
+
+                    V += -corpo_1.m*corpo_2.m*self.G/d
+            corpi.remove(corpo_1)
+
+        return V
+
 
 #creazione dei corpi nella simulazione
 C1 = Corpo(0.5, 0, 0, 20, int(1e3))
@@ -79,19 +111,29 @@ and so on for masses and distances for realistic simulation
 N = len(C)
 dim = 2 #il moto avviene su un piano
 
-
-sist = Sistema(C, G, 0.0)
+soft = 0.0
+sist = Sistema(C, G, soft)
+Ene = Energia(C, G, soft)
 
 dt = 1/10000
-steps = int(1/dt)
-X = np.zeros((dim, steps, N))
+T = int(1/dt)
+X = np.zeros((dim, T, N))
+ene = np.zeros(T)
 
-for t in range(steps):
+for t in range(T):
+
+    ene[t] = Ene.cinetica() + Ene.potenziale()
+
     sist.evolvo(dt)
     for n, corpo in zip(range(N), sist.corpi):
         X[:, t, n] = corpo.x, corpo.y
 
-fig = plt.figure(1)
+plt.figure(1)
+plt.title('Energia del sistema: $E-E(t_0)$', fontsize=20)
+plt.plot(np.linspace(0, T, len(ene)), ene-ene[0])
+plt.grid()
+
+fig = plt.figure(2)
 plt.title('Sistema binario con pianeta', fontsize=15)
 plt.grid()
 plt.xlim(np.min(X[0,:,:])-0.5, np.max(X[0,:,:])+0.5)
@@ -118,7 +160,7 @@ def animate(i):
 
     return dot[0], dot[1], dot[2], line[0], line[1], line[2]
 
-anim = animation.FuncAnimation(fig, animate, frames=range(0, steps-1, 5), interval=10, blit=True, repeat=True)
+anim = animation.FuncAnimation(fig, animate, frames=range(0, T-1, 5), interval=10, blit=True, repeat=True)
 #anim.save('bin_sist.mp4', fps=160,  extra_args=['-vcodec', 'libx264'])
 
 plt.show()

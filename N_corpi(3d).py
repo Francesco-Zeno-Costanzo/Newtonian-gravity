@@ -70,6 +70,38 @@ class Sistema:
         for corpo in self.corpi:
             corpo.n_pos(dt)
 
+class Energia:
+    '''
+    energia del sistema al tempo t
+    '''
+    def __init__(self, corpi, G, sp=0):
+        self.corpi = corpi
+        self.G = G
+        self.sp = sp
+
+    def cinetica(self):
+        K = 0
+        for corpo in self.corpi:
+            K += 0.5*corpo.m*(corpo.vx**2 + corpo.vy**2 + corpo.vz**2)
+        return K
+
+    def potenziale(self):
+        V = 0
+        corpi=self.corpi.copy()
+        for corpo_1 in corpi:
+            for corpo_2 in corpi:
+                if corpo_1 != corpo_2:
+                    dx = corpo_2.x - corpo_1.x
+                    dy = corpo_2.y - corpo_1.y
+                    dz = corpo_2.z - corpo_1.z
+
+                    d = np.sqrt(dx**2 + dy**2 + dz**2 + self.sp)
+
+                    V += -corpo_1.m*corpo_2.m*self.G/d
+            corpi.remove(corpo_1)
+
+        return V
+
 #numero di corpi, pari per come vengono creati
 N = 10
 C = []
@@ -97,15 +129,25 @@ and so on for masses and distances for realistic simulation
 dim = 3 #il moto avviene nello spazio
 
 sist = Sistema(C, G, 0.01)
+Ene = Energia(C, G, soft)
 
 dt = 1 / 10000
 T = int(1 / dt)
 X=np.zeros((dim, T, N))
+ene = np.zeros(T)
 
 for t in range(T):
+    ene[t] = Ene.cinetica() + Ene.potenziale()
     sist.evolvo(dt)
     for n, corpo in zip(range(N), sist.corpi):
         X[:, t, n] = corpo.x, corpo.y, corpo.z
+
+
+plt.figure(1)
+plt.title('Energia del sistema: $E-E(t_0)$', fontsize=20)
+plt.plot(np.linspace(0, T, len(ene)), ene-ene[0])
+plt.grid()
+
 
 fig = plt.figure(2)
 ax = fig.gca(projection='3d')
