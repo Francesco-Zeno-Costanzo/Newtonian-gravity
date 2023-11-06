@@ -167,8 +167,8 @@ def Ang(x1, vx1, y1, vy1, x2, vx2, y2, vy2, x3, vx3, y3, vy3):
 # Computational parameters and initial condition
 #=====================================================================
 
-num_steps = 100000
-tf = 0.4
+num_steps = 20000
+tf = 0.2
 
 # First mass
 x1_0  = -1
@@ -214,18 +214,18 @@ plt.plot(x3, y3, 'b')
 
 
 plt.figure(2)
-plt.title('Energy of the system: $E(t)-E(t_0)$', fontsize=20)
+plt.title('Energy of the system', fontsize=20)
 plt.grid()
-plt.plot(t, (E-E[0]))
+plt.plot(t, (E-E[0])/E)
 plt.xlabel('t', fontsize=20)
-plt.ylabel('$E(t)-E(t_0)$', fontsize=20)
+plt.ylabel(r'$\frac{E(t)-E(t_0)}{E(t)}$', fontsize=20)
 
 plt.figure(3)
-plt.title('Angular momentum: $L(t)-L(t_0)$', fontsize=20)
+plt.title('Angular momentum', fontsize=20)
 plt.grid()
-plt.plot(t, (L -L[0]))
+plt.plot(t, (L -L[0])/L)
 plt.xlabel('t', fontsize=20)
-plt.ylabel('$L(t)-L(t_0)$', fontsize=20)
+plt.ylabel(r'$\frac{L(t)-L(t_0)}{L(t)}$', fontsize=20)
 
 # Uncomment to see the animation
 """

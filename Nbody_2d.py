@@ -1,4 +1,6 @@
+import time
 import numpy as np
+import random as rn
 import matplotlib.pyplot as plt
 from matplotlib import animation
 
@@ -187,28 +189,38 @@ class Measure:
 # Creating bodies and the system and computational parameters
 #===========================================================================
 
+rn.seed(69420)
 dt = 1/20000
-T  = int(1/dt)
+T  = int(2/dt)
 E  = np.zeros(T)
 L  = np.zeros(T)
 G  = 1
 
-# creation of body
-C1 = Body(0.5,  0, 0, 20,  int(1e3))
-C2 = Body(-0.5, 0, 0, -20, int(1e3))
-C3 = Body(-1.5, 0, 0, 40,  int(1e1))
-C  = [C1, C2, C3]
-N  = len(C)
-X  = np.zeros((2, T, N)) # 2 because the motion is on a plane
+#numero di corpi, pari per come vengono creati
+N = 10
+C = []
+x = np.linspace(0, 2*np.pi, N)
+for n in range(N//2):
+    #vengono creati due copri alla volta con velocità uguale e opposta
+    #per mantenere l'impulso totale del sistema nullo
+    v_x = rn.uniform(-0.5, 0.5)
+    v_y = rn.uniform(-0.5, 0.5)
+    C.append(Body(rn.uniform(-0.5, 0.5), rn.uniform(-0.5, 0.5), v_x, v_y))
+    C.append(Body(rn.uniform(-0.5, 0.5), rn.uniform(-0.5, 0.5), -v_x, -v_y))
+    #C.append(Body(np.cos(x[n]), np.sin(x[n]), -3*np.sin(x[n]), 3*np.cos(x[n]), m=2.5))
+
+X = np.zeros((2, T, N)) # 2 because the motion is on a plane
 
 # Creation of the system
-soft = 0.0
+soft = 0.01
 sist = System( C, G, soft)
 M    = Measure(C, G, soft)
 
 #===========================================================================
 # Evolution
 #===========================================================================
+
+start = time.time()
 
 for t in range(T):
 
@@ -218,6 +230,8 @@ for t in range(T):
     sist.update(dt)
     for n, body in enumerate(sist.bodies):
         X[:, t, n] = body.x, body.y
+
+print("--- %s seconds ---" % (time.time() - start))
 
 #===========================================================================
 # Plot and animation
@@ -241,7 +255,7 @@ fig = plt.figure(2)
 plt.grid()
 plt.xlim(np.min(X[::2, :])-0.5, np.max(X[::2, :])+0.5)
 plt.ylim(np.min(X[1::2,:])-0.5, np.max(X[1::2,:])+0.5)
-colors = plt.cm.jet(np.linspace(0, 1, 3))
+colors = ['b']*N#plt.cm.jet(np.linspace(0, 1, N))
 
 dot  = np.array([]) # for the planet
 line = np.array([]) # to see the trace
@@ -255,26 +269,26 @@ def animate(i):
     for k in range(N):
         len_trace = 5000
 
-        # Trace of the trajectory       
-        if i > len_trace:
-            line[k].set_data(X[0, i-len_trace:i, k], X[1, i-len_trace:i, k])
-        else:
-            line[k].set_data(X[0, :i, k], X[1, :i, k])
+        # Trace of the trajectory, it can create confusion       
+        #if i > len_trace:
+        #    line[k].set_data(X[0, i-len_trace:i, k], X[1, i-len_trace:i, k])
+        #else:
+        #    line[k].set_data(X[0, :i, k], X[1, :i, k])
         
         # Point
         dot[k].set_data(X[0, i, k], X[1, i, k])
     
-    ALL = [dot, line]
+    ALL = [dot]#, line]
     return ALL
 
 anim = animation.FuncAnimation(fig, animate, frames=np.arange(0, T, 50), interval=1, blit=True, repeat=True)
 
 
-plt.title('Binary stars and planet', fontsize=20)
+plt.title('N body problem', fontsize=20)
 plt.xlabel('X(t)', fontsize=20)
 plt.ylabel('Y(t)', fontsize=20)
 
 # Ucomment to save the animation
-#anim.save('grav1.mp4', fps=120, extra_args=['-vcodec', 'libx264']) 
+anim.save('N_body.gif', fps=50)# extra_args=['-vcodec', 'libx264']) 
 
 plt.show()
