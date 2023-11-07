@@ -1,3 +1,8 @@
+"""
+Code to solve the N-body problem on the plane.
+A symplectic integrator is used and angular momentum
+and energy are verified to be conserved.
+"""
 import time
 import numpy as np
 import random as rn
@@ -196,13 +201,16 @@ E  = np.zeros(T)
 L  = np.zeros(T)
 G  = 1
 
-#numero di corpi, pari per come vengono creati
+# Number of body, must be even
 N = 10
 C = []
 x = np.linspace(0, 2*np.pi, N)
 for n in range(N//2):
-    #vengono creati due copri alla volta con velocità uguale e opposta
-    #per mantenere l'impulso totale del sistema nullo
+    '''
+    two bodies are created at a time
+    with equal and opposite velocity
+    to keep the total momentum of the system zero
+    '''
     v_x = rn.uniform(-0.5, 0.5)
     v_y = rn.uniform(-0.5, 0.5)
     C.append(Body(rn.uniform(-0.5, 0.5), rn.uniform(-0.5, 0.5), v_x, v_y))
@@ -288,7 +296,7 @@ plt.title('N body problem', fontsize=20)
 plt.xlabel('X(t)', fontsize=20)
 plt.ylabel('Y(t)', fontsize=20)
 
-# Ucomment to save the animation
-anim.save('N_body.gif', fps=50)# extra_args=['-vcodec', 'libx264']) 
+# Ucomment to save the animation, extra_args for .mp4
+#anim.save('N_body.gif', fps=50)# extra_args=['-vcodec', 'libx264']) 
 
 plt.show()

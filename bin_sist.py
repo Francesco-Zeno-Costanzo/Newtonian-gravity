@@ -1,3 +1,9 @@
+"""
+Code to solve the N-body problem on the plane.
+We consider a two star system with a planet (tatooine)
+A symplectic integrator is used and angular momentum
+and energy are verified to be conserved.
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
@@ -253,7 +259,7 @@ for c in colors:
 def animate(i):
     
     for k in range(N):
-        len_trace = 5000
+        len_trace = 1000
 
         # Trace of the trajectory       
         if i > len_trace:
