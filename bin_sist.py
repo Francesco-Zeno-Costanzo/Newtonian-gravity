@@ -8,6 +8,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
 
+# For better plot
+import mplhep
+plt.style.use(mplhep.style.CMS)
 
 class Body:
     '''
@@ -194,7 +197,7 @@ class Measure:
 #===========================================================================
 
 dt = 1/20000
-T  = int(1/dt)
+T  = int(2/dt)
 E  = np.zeros(T)
 L  = np.zeros(T)
 G  = 1
@@ -229,19 +232,23 @@ for t in range(T):
 # Plot and animation
 #===========================================================================
 
-plt.figure(0)
-plt.title('Energy of the system', fontsize=20)
+t = np.linspace(0, T*dt, T)
+plt.figure(0)#, figsize=(10, 9))
+plt.title('Energy of the system')#, fontsize=20)
 plt.grid()
-plt.plot((E-E[0])/E)
-plt.xlabel('t', fontsize=20)
-plt.ylabel(r'$\frac{E(t)-E(t_0)}{E(t)}$', fontsize=20)
+plt.plot(t, (E-E[0])/E)
+plt.xlabel('t')#, fontsize=20)
+plt.ylabel(r'$\frac{E(t)-E(t_0)}{E(t)}$')#, fontsize=20)
+plt.savefig("ene_yosh_simpl.pdf")
 
-plt.figure(1)
-plt.title('Angular momentum', fontsize=20)
+
+plt.figure(1)#, figsize=(10, 9))
+plt.title('Angular momentum')#, fontsize=20)
 plt.grid()
-plt.plot((L -L[0])/L)
-plt.xlabel('t', fontsize=20)
-plt.ylabel(r'$\frac{L(t)-L(t_0)}{L(t)}$', fontsize=20)
+plt.plot(t, (L -L[0])/L)
+plt.xlabel('t')#, fontsize=20)
+plt.ylabel(r'$\frac{L(t)-L(t_0)}{L(t)}$')#, fontsize=20)
+plt.savefig("ang_yosh_simpl.pdf")
 
 fig = plt.figure(2)
 plt.grid()
@@ -254,7 +261,8 @@ line = np.array([]) # to see the trace
 
 for c in colors:
     dot  = np.append(dot,  plt.plot([], [], 'o', c=c))
-    line = np.append(line, plt.plot([], [], '-', c=c))
+    line = np.append(line, plt.plot([], [], '-', c=c))   
+
 
 def animate(i):
     
@@ -270,15 +278,16 @@ def animate(i):
         # Point
         dot[k].set_data(X[0, i, k], X[1, i, k])
     
-    ALL = [dot, line]
+    ALL = [*dot, *line]
     return ALL
 
-anim = animation.FuncAnimation(fig, animate, frames=np.arange(0, T, 50), interval=1, blit=True, repeat=True)
+anim = animation.FuncAnimation(fig, animate, frames=np.arange(0, T, 50),
+                               interval=1, blit=True, repeat=True)
 
 
-plt.title('Binary stars and planet', fontsize=20)
-plt.xlabel('X(t)', fontsize=20)
-plt.ylabel('Y(t)', fontsize=20)
+plt.title('Binary stars and planet')#, fontsize=20)
+plt.xlabel('X(t)')#, fontsize=20)
+plt.ylabel('Y(t)')#, fontsize=20)
 
 # Ucomment to save the animation
 #anim.save('grav1.mp4', fps=120, extra_args=['-vcodec', 'libx264']) 
