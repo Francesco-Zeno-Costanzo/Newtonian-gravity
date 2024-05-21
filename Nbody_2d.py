@@ -286,7 +286,7 @@ def animate(i):
         # Point
         dot[k].set_data(X[0, i, k], X[1, i, k])
     
-    ALL = [dot]#, line]
+    ALL = [*dot]#, line]
     return ALL
 
 anim = animation.FuncAnimation(fig, animate, frames=np.arange(0, T, 50), interval=1, blit=True, repeat=True)
