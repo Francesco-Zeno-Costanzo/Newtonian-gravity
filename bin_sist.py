@@ -206,9 +206,11 @@ G  = 1
 C1 = Body(0.5,  0, 0, 20,  int(1e3))
 C2 = Body(-0.5, 0, 0, -20, int(1e3))
 C3 = Body(-1.5, 0, 0, 40,  int(1e1))
-C  = [C1, C2, C3]
+#C4 = Body(1.5, 0, 0, -40,  int(1e1))
+C  = [C1, C2, C3]#, C4]
 N  = len(C)
 X  = np.zeros((2, T, N)) # 2 because the motion is on a plane
+V  = np.zeros((2, T, N)) # 2 because the motion is on a plane
 
 # Creation of the system
 soft = 0.0
@@ -227,10 +229,13 @@ for t in range(T):
     sist.update(dt)
     for n, body in enumerate(sist.bodies):
         X[:, t, n] = body.x, body.y
+        V[:, t, n] = body.vx, body.vy
 
 #===========================================================================
 # Plot and animation
 #===========================================================================
+np.save("datax.npy", X)
+np.save("datav.npy", V)
 
 t = np.linspace(0, T*dt, T)
 plt.figure(0)#, figsize=(10, 9))
@@ -239,7 +244,7 @@ plt.grid()
 plt.plot(t, (E-E[0])/E)
 plt.xlabel('t')#, fontsize=20)
 plt.ylabel(r'$\frac{E(t)-E(t_0)}{E(t)}$')#, fontsize=20)
-plt.savefig("ene_yosh_simpl.pdf")
+#plt.savefig("ene_yosh_simpl.pdf")
 
 
 plt.figure(1)#, figsize=(10, 9))
@@ -248,13 +253,13 @@ plt.grid()
 plt.plot(t, (L -L[0])/L)
 plt.xlabel('t')#, fontsize=20)
 plt.ylabel(r'$\frac{L(t)-L(t_0)}{L(t)}$')#, fontsize=20)
-plt.savefig("ang_yosh_simpl.pdf")
+#plt.savefig("ang_yosh_simpl.pdf")
 
 fig = plt.figure(2)
 plt.grid()
 plt.xlim(np.min(X[::2, :])-0.5, np.max(X[::2, :])+0.5)
 plt.ylim(np.min(X[1::2,:])-0.5, np.max(X[1::2,:])+0.5)
-colors = plt.cm.jet(np.linspace(0, 1, 3))
+colors = plt.cm.jet(np.linspace(0, 1, N))
 
 dot  = np.array([]) # for the planet
 line = np.array([]) # to see the trace
