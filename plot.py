@@ -1,5 +1,9 @@
 """
-
+In this code we firstly set parameters for simulatioon.
+These parameters will be written in a txt file which is
+the input for C code.
+The second part we load de data of simulation to make
+plot ad namimation of the system.
 """
 import numpy as np
 import random as rn
@@ -10,8 +14,12 @@ from matplotlib import animation
 import mplhep
 plt.style.use(mplhep.style.CMS)
 
+#===========================================================================
+# Computational parameters
+#===========================================================================
+
 dt   = 1/20000
-T    = int(2/dt)
+T    = int(6/dt)
 G    = 1
 soft = 0.01
 """
@@ -23,8 +31,8 @@ N    = len(M)
 N = 100
 X = []
 V = []
-M = [1]*N
-rn.seed(69420)
+M = [1, 2]*(N//2)
+np.random.seed(69420)
 x = np.linspace(0, 2*np.pi, N)
 
 for n in range(N//2):
@@ -33,20 +41,29 @@ for n in range(N//2):
     with equal and opposite velocity
     to keep the total momentum of the system zero
     '''
-    #v_x, v_y = rn.uniform(-0.5, 0.5), rn.uniform(-0.5, 0.5)
+    #v_x, v_y = np.random.uniform(-0.5, 0.5), np.random.uniform(-0.5, 0.5)
 
-    #X.append(rn.uniform(-0.5, 0.5)); X.append(rn.uniform(-0.5, 0.5))
-    #V.append(v_x); V.append(v_y)
+    #X.append(np.random.uniform(-0.5, 0.5))
+    #X.append(np.random.uniform(-0.5, 0.5))
+    #V.append(v_x)
+    #V.append(v_y)
 
-    #X.append(rn.uniform(-0.5, 0.5)); X.append(rn.uniform(-0.5, 0.5))
-    #V.append(-v_x); V.append(-v_y)
-    X.append(np.random.normal(-0.35, 0.05)); X.append(np.random.normal(0.0, 0.05))
-    V.append(0); V.append(5)
+    #X.append(np.random.uniform(-0.5, 0.5))
+    #X.append(np.random.uniform(-0.5, 0.5))
+    #V.append(-v_x)
+    #V.append(-v_y)
 
-    X.append(np.random.normal(0.35, 0.05)); X.append(np.random.normal(0.0, 0.05))
-    V.append(0); V.append(-5)
+    X.append(np.random.normal(-0.45, 0.05))
+    X.append(np.random.normal(0.0, 0.05))
+    V.append(0)
+    V.append(5)
 
+    X.append(np.random.normal(0.45, 0.05))
+    X.append(np.random.normal(0.0, 0.05))
+    V.append(0)
+    V.append(-5)
 
+# write on a file that will be read by c code
 with open("init.txt", "w") as f:
     f.write(f"{G} {soft} {dt} {N} {T} \n")
     for m, x, y, vx, vy in zip(M, X[0::2], X[1::2], V[0::2], V[1::2]):
@@ -56,7 +73,7 @@ with open("init.txt", "w") as f:
 #exit()
 
 #===========================================================================
-# Creating bodies and the system and computational parameters
+# Load data
 #===========================================================================
 
 T = T + 1 # for initial condition
