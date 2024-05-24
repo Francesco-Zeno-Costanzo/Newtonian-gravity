@@ -19,19 +19,23 @@ plt.style.use(mplhep.style.CMS)
 #===========================================================================
 
 dt   = 1/20000
-T    = int(6/dt)
+T    = int(2/dt)
 G    = 1
 soft = 0.01
 """
-M    = [1000, 1000, 10]
-X    = [0.5, 0, -0.5, 0, -1.5, 0]
-V    = [0,  20, 0,  -20, 0,   40]
+#M    = [1000, 1000, 10]
+#X    = [0.5, 0, -0.5, 0, -1.5, 0]
+#V    = [0,  20, 0,  -20, 0,   40]
+#N    = len(M)
+M    = [1000, 1]
+X    = [0, 0, -2.5, 0]
+V    = [0, 0, 0, 15]
 N    = len(M)
 """
 N = 100
 X = []
 V = []
-M = [1, 2]*(N//2)
+M = [1]*N
 np.random.seed(69420)
 x = np.linspace(0, 2*np.pi, N)
 
@@ -53,12 +57,12 @@ for n in range(N//2):
     #V.append(-v_x)
     #V.append(-v_y)
 
-    X.append(np.random.normal(-0.45, 0.05))
+    X.append(np.random.normal(-0.35, 0.05))
     X.append(np.random.normal(0.0, 0.05))
     V.append(0)
     V.append(5)
 
-    X.append(np.random.normal(0.45, 0.05))
+    X.append(np.random.normal(0.35, 0.05))
     X.append(np.random.normal(0.0, 0.05))
     V.append(0)
     V.append(-5)
