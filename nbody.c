@@ -132,6 +132,10 @@ void update(){
     }
 }
 
+/******************************************************/
+/*****************Physical quantities******************/
+/******************************************************/
+
 double energy(){
     /* Compute the total energy */
     double K, V;
@@ -163,15 +167,19 @@ double angular(){
     return L;
 }
 
+/******************************************************/
+/******************Main of the code********************/
+/******************************************************/
+
 int main(int argC, char* argV[]){
     clock_t start = clock(); // Misura il tempo di esecuzione
     
     FILE* fpd = fopen(argV[2],"w");
     FILE* fpq = fopen(argV[3],"w");
 
-	if(argC!=4)
+	if(argC!=4){
 		printf("Usage: %s <file containing initial configuration> <file to store output> <file for E & L> \n",argV[0]);
-
+    }
     else{
         /*Initialize the system*/
 		init(argV[1]);
