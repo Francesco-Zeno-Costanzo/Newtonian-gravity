@@ -202,7 +202,7 @@ L  = np.zeros(T)
 G  = 1
 
 # Number of body, must be even
-N = 10
+N = 2
 C = []
 x = np.linspace(0, 2*np.pi, N)
 for n in range(N//2):

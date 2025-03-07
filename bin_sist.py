@@ -268,7 +268,6 @@ for c in colors:
     dot  = np.append(dot,  plt.plot([], [], 'o', c=c))
     line = np.append(line, plt.plot([], [], '-', c=c))   
 
-
 def animate(i):
     
     for k in range(N):
@@ -276,12 +275,12 @@ def animate(i):
 
         # Trace of the trajectory       
         if i > len_trace:
-            line[k].set_data(X[0, i-len_trace:i, k], X[1, i-len_trace:i, k])
+            line[k].set_data((X[0, i-len_trace:i, k],), (X[1, i-len_trace:i, k],))
         else:
-            line[k].set_data(X[0, :i, k], X[1, :i, k])
+            line[k].set_data((X[0, :i, k],), (X[1, :i, k],))
         
         # Point
-        dot[k].set_data(X[0, i, k], X[1, i, k])
+        dot[k].set_data((X[0, i, k],), (X[1, i, k],))
     
     ALL = [*dot, *line]
     return ALL

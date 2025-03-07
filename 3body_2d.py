@@ -227,48 +227,4 @@ plt.plot(t, (L -L[0])/L)
 plt.xlabel('t', fontsize=20)
 plt.ylabel(r'$\frac{L(t)-L(t_0)}{L(t)}$', fontsize=20)
 
-# Uncomment to see the animation
-"""
-X = np.array([x1, y1, x2, y2, x3, y3])
-
-fig = plt.figure(4)
-plt.grid()
-plt.xlim(np.min(X[::2, :])-0.5, np.max(X[::2, :])+0.5)
-plt.ylim(np.min(X[1::2,:])-0.5, np.max(X[1::2,:])+0.5)
-colors = plt.cm.jet(np.linspace(0, 1, 3))
-
-dot  = np.array([]) # for the planet
-line = np.array([]) # to see the trace
-
-for c in colors:
-    dot  = np.append(dot,  plt.plot([], [], 'o', c=c))
-    line = np.append(line, plt.plot([], [], '-', c=c))
-
-def animate(i):
-    
-    for k in range(3):
-        len_trace = 5000
-        
-        # Trace of the trajectory
-        if i > len_trace:
-            line[k].set_data(X[2*k, i-len_trace:i], X[2*k+1, i-len_trace:i])
-        else:
-            line[k].set_data(X[2*k, :i], X[2*k+1, :i])
-        
-        # point
-        dot[k].set_data(X[2*k, i], X[2*k+1, i])
-    
-    ALL = [dot, line]
-    return ALL
-
-anim = animation.FuncAnimation(fig, animate, frames=np.arange(0, num_steps+1, 10), interval=1, blit=True, repeat=True)
-
-
-plt.title('3 body problem', fontsize=20)
-plt.xlabel('X(t)', fontsize=20)
-plt.ylabel('Y(t)', fontsize=20)
-
-# Ucomment to save the animation
-#anim.save('grav1.mp4', fps=120, extra_args=['-vcodec', 'libx264']) 
-"""
 plt.show()

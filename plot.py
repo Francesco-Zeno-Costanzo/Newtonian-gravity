@@ -139,7 +139,7 @@ def animate(i):
         #    line[k].set_data(x[:i, k], y[:i, k])
         
         # Point
-        dot[k].set_data(x[i, k], y[i, k])
+        dot[k].set_data((x[i, k],), (y[i, k],))
     
     ALL = [*dot]#, *line]
     return ALL
